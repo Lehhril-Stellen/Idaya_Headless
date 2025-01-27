@@ -1,0 +1,124 @@
+import React, { useRef, useEffect, useState } from "react";
+
+const OurrumBanner = () => {
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      setIsUserScrolling(true);
+      let timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        setIsUserScrolling(false);
+      }, 200);
+    }
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    function initializeSliderRum() {
+      const options = {
+        section: ".ourrumslide .panel",
+        scrollSpeed: 2000,
+        scrollbars: true,
+        updateHash: false,
+        touchScroll: true,
+        overflowScroll: true,
+        setHeights: true,
+      };
+
+      $.scrollify(options);
+    }
+    
+    const isOurRumPage = window.location.pathname === "/ourrum";
+
+    if (isOurRumPage) {
+      initializeSliderRum();
+    }
+
+    return () => {
+      if (isOurRumPage) {
+        try {
+          $.scrollify.destroy();
+        } catch (error) {
+          // console.error("Error destroying Scrollify Rum :", error);
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isUserScrolling) {
+      const sections = $('section');
+      $(window).on('scroll', function() {
+        const cur_pos = $(this).scrollTop();
+        sections.each(function() {
+          const top = $(this).offset().top - 200,
+                bottom = top + $(this).outerHeight();
+          if (cur_pos >= top && cur_pos <= bottom) {
+            $(this).addClass('activetitle');
+          }
+        });
+      });
+    }
+  }, [isUserScrolling]);
+
+  useEffect(() => {
+    $('.home').addClass('activetitle');
+  }, []);
+
+  return (
+    <div className="main" id="container1">
+      <div className="main-content home_sticky" id="container2">
+        <section className="home">
+          <div className="main-panel">
+            <div id="scenes" className="our-rum-banner" data-relative-input="true"></div>
+            <div className="slides ourrumslide">
+              <div className="panel vh-fix">
+                <div className="logomark">
+                  <img src="images/logomark.svg" alt="logomark" />
+                </div>
+              </div>
+              <div className="panel vh-fix" id="slide1">
+                <div>
+                  <h4 className="text-white mt-15p w-100 text-center mb-10">A TASTE AS OLD AS TIME</h4>
+                  <h2 className="w-100">
+                    <span>Origi</span>
+                    <span>nating</span>
+                    <span className="ml-2">in</span>
+                    <span>the</span>
+                    <span className="ml-2">Himalayas,</span>
+                    <span className="ml-2">our</span>
+                    <span className="ml-2">rum</span> <br/>
+                    <span className="ml-2">references</span>
+                    <span className="ml-2">traditional</span>
+                    <span className="ml-2">Indian</span><br/>
+                    <span className="ml-2">inspired</span>
+                    <span className="ml-2">by dravya</span>
+                    <span className="ml-2">shastra,</span><br/>
+                    <span className="ml-2">and </span>
+                    <span className="ml-2">the </span>
+                    <span className="ml-2"> Solera system.</span>
+                    <span className="ml-2">This time-honoured</span><br/>
+                    <span className="ml-2">provenance, rooted</span>
+                    <span className="ml-2">in Indian culture,</span><br/>
+                    <span className="ml-2">is</span>
+                    <span className="ml-2">what forms</span>
+                    <span className="ml-2">the essence</span>
+                    <span className="ml-2">of Idaaya.</span>   
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default OurrumBanner;
